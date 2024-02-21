@@ -1,0 +1,188 @@
+import { Image, Center } from "@mantine/core";
+import { AspectRatio } from "@mantine/core";
+import Link from "next/link";
+
+## 1. Introducción a Arduino:
+
+## ¿Qué es Arduino?
+
+<Image
+  mb={"sm"}
+  radius="md"
+  h={300}
+  src="https://images.unsplash.com/photo-1559819614-81fea9efd090?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+/>
+
+Arduino es una plataforma de código abierto que combina hardware y software para crear proyectos electrónicos.
+
+### Se compone de:
+
+- Placa electrónica:
+  - Contiene un microcontrolador reprogramable.
+  - Tiene pines para conectar sensores, actuadores y otros dispositivos.
+- Software:
+  - Entorno de desarrollo integrado (IDE) para escribir código.
+  - Lenguaje de programación basado en C++.
+- Comunidad:
+  - Amplia comunidad de usuarios que comparten información y proyectos.
+
+### ¿Para qué sirve?
+
+- Prototipado rápido de proyectos electrónicos:
+  Desde robots hasta sistemas de domótica.
+- Aprendizaje de electrónica y programación:
+  De forma fácil y accesible.
+- Creación de dispositivos interactivos:
+  - Que interactúen con el mundo real.
+
+### ¿Por qué es popular?
+
+- Fácil de usar:
+  - Entorno de desarrollo intuitivo.
+  - Amplia documentación y tutoriales.
+- Accesible:
+  - Placas y componentes económicos.
+- Flexible:
+  - Gran variedad de placas y componentes disponibles.
+- Código abierto:
+  - Libertad para modificar y personalizar el hardware y software.
+
+### ¿Dónde puedo aprender más?
+
+- Sitio web oficial de Arduino: https://www.arduino.cc/
+- Documentación oficial: https://docs.arduino.cc/
+- Tutoriales y proyectos: https://www.arduino.cc/tutorials
+- Comunidad de Arduino: https://forum.arduino.cc/
+
+## 2. Fundamentos de programación:
+
+### Estructura básica de un programa en Arduino:
+
+```cpp
+void setup() {
+  // Se ejecuta una vez al iniciar el programa.
+  // Se utiliza para configurar el hardware, como pines de entrada/salida, comunicación serial, etc.
+}
+
+void loop() {
+  // Se ejecuta en un bucle infinito hasta que se apaga el dispositivo.
+  // Aquí se escribe el código que se ejecutará repetidamente.
+}
+```
+
+### Variables y tipos de datos:
+
+Las variables se utilizan para almacenar datos en la memoria del microcontrolador.
+Existen diferentes tipos de datos para almacenar diferentes tipos de información:
+
+- int: Números enteros (1, 2, 3, ...)
+- float: Números decimales (3.14, 2.718, ...)
+- char: Caracteres alfanuméricos ('a', 'B', 'C', ...)
+- bool: Valores booleanos (true, false)
+- Otros tipos: Arrays, structs, etc.
+
+```cpp
+const int ledPin = 13;
+
+int entero = 10;
+float decimal = 3.14159;
+char caracter = 'A';
+bool booleano = true;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (booleano) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  // Puedes agregar aquí código para usar las variables de la forma que necesites.
+  // Por ejemplo, puedes realizar operaciones matemáticas, comparar valores, etc.
+
+  delay(1000);
+}
+```
+
+### Operadores y expresiones:
+
+- Se utilizan para realizar operaciones matemáticas y lógicas con variables.
+- Algunos ejemplos de operadores:
+  - Aritméticos: `+, -, *, /, %`
+  - Relacionales: `<, >, <=, >=, ==, !=`
+  - Lógicos: && `(AND), || (OR), ! (NOT)`
+- Las expresiones combinan variables, operadores y valores para obtener un resultado.
+
+### Sentencias condicionales:
+
+- Permiten ejecutar diferentes acciones en función de una condición.
+- Las sentencias condicionales más comunes son:
+
+```cpp
+if (condicion) {
+  // Se ejecuta un bloque de código si se cumple la condición.
+} else {
+  // Se ejecuta un bloque de código si no se cumple la condición del if.
+}
+
+switch (variable) {
+  case valor1:
+    // Se ejecuta un bloque de código si el valor de la variable coincide con valor1.
+    break;
+  case valor2:
+    // Se ejecuta un bloque de código si el valor de la variable coincide con valor2.
+    break;
+  default:
+    // Se ejecuta un bloque de código si el valor de la variable no coincide con ningún caso anterior.
+}
+```
+
+### Bucles:
+
+- Permiten ejecutar un bloque de código de forma repetitiva.
+- Los bucles más comunes son:
+
+```cpp
+for (int i = 0; i < 10; i++) {
+  // Se ejecuta un bloque de código 10 veces.
+}
+
+while (condicion) {
+  // Se ejecuta un bloque de código mientras se cumpla la condición.
+}
+
+do {
+  // Se ejecuta un bloque de código al menos una vez.
+} while (condicion);
+```
+
+## Curso de Arduino
+
+<Link href="https://www.youtube.com/@BitwiseAr" target="_blank">
+  Ir al curso
+</Link>
+
+## Plataforma de simulación de Arduino
+
+### Tinkercad
+
+Tinkercad es una plataforma online gratuita que te permite diseñar, simular y programar circuitos electrónicos. Ofrece una interfaz intuitiva, una biblioteca de componentes preconstruidos y un entorno de aprendizaje seguro. Puedes usar Tinkercad para prototipar ideas, aprender electrónica y coding, o colaborar en proyectos con otros.
+
+<Link href="https://www.tinkercad.com/" target="_blank">
+  Ir a Tinkercad
+</Link>
+
+### Wokwi
+
+Wokwi es una plataforma online gratuita que te permite simular, programar y compartir proyectos de electrónica de forma rápida y sencilla. Ofrece una interfaz intuitiva con un editor de código integrado, permitiendo crear circuitos con microcontroladores como Arduino,
+
+<Link href="https://wokwi.com/" target="_blank">
+  Ir a Wokwi
+</Link>
+
+
+
+

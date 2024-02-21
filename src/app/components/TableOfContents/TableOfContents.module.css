@@ -1,0 +1,31 @@
+.root {
+  --link-height: rem(25px);
+  --indicator-size: rem(10px);
+  --indicator-offset: calc((var(--link-height) - var(--indicator-size)) / 2);
+  position: relative;
+}
+
+.link {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding-right: 10px; 
+  color: var(--mantine-color-text);
+  line-height: var(--link-height);
+  font-size: var(--mantine-font-size-xs);
+  border-top-right-radius: var(--mantine-radius-sm);
+  border-bottom-right-radius: var(--mantine-radius-sm);
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.linkActive {
+  font-weight: 500;
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+}
+

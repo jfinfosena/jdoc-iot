@@ -1,0 +1,38 @@
+{
+  "name": "doc-editor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@code-hike/mdx": "^0.9.0",
+    "@mantine/core": "^7.5.1",
+    "@mantine/hooks": "^7.5.1",
+    "@mantine/notifications": "^7.5.2",
+    "@mdx-js/loader": "^3.0.0",
+    "@mdx-js/react": "^3.0.0",
+    "@next/mdx": "^14.1.0",
+    "@prisma/client": "^5.9.1",
+    "@tabler/icons-react": "^2.47.0",
+    "@types/mdx": "^2.0.11",
+    "embla-carousel-react": "^7.1.0",
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "remark-gfm": "^4.0.0",
+    "remark-toc": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "postcss": "^8.4.34",
+    "postcss-preset-mantine": "^1.13.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "^5"
+  }
+}
