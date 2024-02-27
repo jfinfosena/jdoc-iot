@@ -4,7 +4,7 @@ import { ScrollArea, Text } from '@mantine/core';
 import classes from './NavbarSimple.module.css';
 import Link from 'next/link';
 import { notifications } from '@mantine/notifications';
-import { sessions } from '@/app/course/page.data';
+import { dev_mode, sessions } from '@/app/course/page.data';
 
 export function NavbarSimple({toggle}:{toggle:()=>void}) {
 
@@ -15,7 +15,7 @@ export function NavbarSimple({toggle}:{toggle:()=>void}) {
     let dateCurrent = new Date();   
     dateCurrent.setHours(0,0,0,0);
     item.date.setHours(0,0,0,0);
-    if (dateCurrent >= item.date) {     
+    if (dateCurrent >= item.date || dev_mode) {     
       return (
         <Link
           className={classes.link}

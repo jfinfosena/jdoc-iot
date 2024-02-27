@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import cx from "clsx";
-import { Box, Text, Group, ScrollArea } from "@mantine/core";
+import { Box, ScrollArea } from "@mantine/core";
 import classes from "./TableOfContents.module.css";
 import Link from "next/link";
-// import { usePathname } from "next/navigation";
+
 
 export function TableOfContents() {
   const [active, setActive] = useState(0);
   const [links, setLinks] = useState<Link[]>([]);
   const [items, setItems] = useState<JSX.Element[]>([]);
-
-  // const path = usePathname();
 
   type Link = {
     label: string;
@@ -19,20 +17,21 @@ export function TableOfContents() {
   };
 
   useEffect(() => {
-    
-      const headers = Array.from(
-        document.querySelectorAll("h1, h2, h3, h4, h5, h6")
-      );
-      const newLinks = headers.map((header, index) => ({
-        label: (header as HTMLElement).innerText,
-        link: `#header${index}`,
-        order: parseInt(header.tagName[1]),
-      }));
-      headers.forEach((header, index) => {
-        (header as HTMLElement).id = `header${index}`;
-      });
-      setLinks(newLinks);
-   
+    const headers = Array.from(
+      document.querySelectorAll("h1, h2, h3, h4, h5, h6")
+    );    
+    const filteredHeaders = headers.filter(
+      (header) => (header as HTMLElement).innerText !== "Tabla de Contenido"
+    );
+    const newLinks = filteredHeaders.map((header, index) => ({
+      label: (header as HTMLElement).innerText,
+      link: `#header${index}`,
+      order: parseInt(header.tagName[1]),
+    }));
+    filteredHeaders.forEach((header, index) => {
+      (header as HTMLElement).id = `header${index}`;
+    });
+    setLinks(newLinks);
   }, []);
 
   useEffect(() => {

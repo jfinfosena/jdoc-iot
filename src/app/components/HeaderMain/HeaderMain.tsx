@@ -20,13 +20,12 @@ export function HeaderMain() {
   return (
     <header className={classes.header}>
       <div className={classes.inner}>
-        <Group>
-          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
+        <Group>          
           <Logo />
         </Group>
 
         <Group>
-          <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
+          <Group ml={50} gap={5} className={classes.links} visibleFrom="md">
             {items}
           </Group>
           <ActionToggle />         

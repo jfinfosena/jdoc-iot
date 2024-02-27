@@ -32,8 +32,7 @@ export default function HomeLayout({
           width: 300,
           breakpoint: "md",
           collapsed: { mobile: !navbarOpened },
-        }}
-        // aside={{ width: 250, breakpoint: "md", collapsed: { mobile: true } }}
+        }}        
         footer={{ height: 40 }}
         padding="md"
       >
@@ -50,8 +49,7 @@ export default function HomeLayout({
             </Group>
             <Group m="sm">
               <Tooltip label={"Tabla de Contenido"}>
-                <ActionIcon
-                  // className={classes.showbutton}
+                <ActionIcon                 
                   onClick={() => {
                     open();
                   }}
@@ -70,10 +68,7 @@ export default function HomeLayout({
         <AppShell.Navbar>
           <NavbarSimple toggle={toggleNavbar} />
         </AppShell.Navbar>
-        <AppShell.Main>{children}</AppShell.Main>
-        {/* <AppShell.Aside>
-          <TableOfContents />
-        </AppShell.Aside> */}
+        <AppShell.Main>{children}</AppShell.Main>       
         <AppShell.Footer>
           <Center mt={10}>
             <Text
@@ -91,9 +86,7 @@ export default function HomeLayout({
           </Center>
         </AppShell.Footer>
       </AppShell>
-      <Drawer
-        // offset={8}
-        // radius="md"
+      <Drawer      
         position="right"
         opened={opened}
         onClose={close}

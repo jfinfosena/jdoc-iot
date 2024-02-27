@@ -1,18 +1,187 @@
+import Link from "next/link";
+import { Image, Center } from "@mantine/core";
 
-## Actividad 2: Ejercicios de operaciones básicas en Java.
+## Actividad 2: Control y Monitorización de LEDs con Sensor DHT22 y MQTT
 
-1. Suma y multiplicación: Escribe un programa que solicite al usuario dos números enteros y luego imprima la suma y multiplicación de esos números.
+Este código implementa un sistema de control y monitorización para dos LEDs utilizando un sensor DHT22 y un broker MQTT. El dispositivo se conecta a la red Wi-Fi y al broker MQTT, y luego:
 
-2. Resta y división: Escribe un programa que tome dos números enteros ingresados por el usuario y calcule la resta y división de esos números.
+- Recibe comandos MQTT: El dispositivo escucha los topics "led1" y "led2". Si recibe "on", enciende el LED correspondiente. Si recibe "off", lo apaga.
+- Envía datos de sensor: Cada segundo, el dispositivo lee la temperatura y la humedad del sensor DHT22 y las publica en los topics "temperatura" y "humedad" del broker MQTT.
 
-3. Operaciones combinadas: Escribe un programa que solicite al usuario tres números enteros y realice las siguientes operaciones: suma de los tres números, multiplicación del primer número por el segundo y división del resultado entre el tercer número.
+```cpp
+// Se incluyen las librerías necesarias
+#include <WiFi.h>        // Para la comunicación Wi-Fi
+#include <PubSubClient.h> // Para la comunicación MQTT
+#include "DHTesp.h"       // Se asume librería personalizada para el sensor DHT
 
-4. Operaciones con decimales: Escribe un programa que solicite al usuario dos números decimales y realice las siguientes operaciones: suma, resta, multiplicación y división.
+// Se definen constantes y variables
+const int DHT_PIN = 15;    // Pin conectado al sensor DHT
+DHTesp dhtSensor;           // Objeto para el sensor DHT
 
-5. Incremento y decremento: Escribe un programa que declare una variable entera y la inicialice con un valor. Luego, incrementa su valor en 1 y muestra el resultado. Después, decrementa su valor en 1 y muestra el resultado nuevamente.
+int led1 = 25;              // Pin conectado al LED 1
+int led2 = 26;              // Pin conectado al LED 2
 
-6. Operador de asignación compuesta: Escribe un programa que declare una variable entera y la inicialice con un valor. Utiliza el operador de asignación compuesta para sumar 5 a la variable y luego mostrar su valor.
+// Configuración MQTT
+String clientId = "myClient1";  // Identificador único del dispositivo
+String broker = "broker.emqx.io";   // Dirección del broker MQTT
+int port = 1883;                   // Puerto utilizado por el broker
 
-7. Operadores lógicos: Escribe un programa que tome dos valores booleanos ingresados por el usuario y muestre el resultado de las operaciones lógicas AND, OR y NOT entre esos valores.
+long prev;                     // Variable para almacenar el tiempo anterior
 
-8. Operador ternario: Escribe un programa que tome un número entero ingresado por el usuario y utilice el operador ternario para determinar si el número es positivo o negativo. Luego, muestra el resultado en la salida.
+// Clientes Wi-Fi y MQTT
+WiFiClient wifiClient;
+PubSubClient wifiMQTT(wifiClient); // Cliente MQTT usando el cliente Wi-Fi
+
+// Función callback para recibir mensajes MQTT
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Topic recibido: ");
+  Serial.println(topic);
+
+  // Convertir el topic y el payload a strings
+  String strTopic = String(topic);
+  String mqttData = "";
+  for (int i = 0; i < length; i++) {
+    mqttData += (char)payload[i];
+  }
+  Serial.print("Datos recibidos: ");
+  Serial.println(mqttData);
+
+  // Controlar los LEDs basados en los comandos recibidos ("on" o "off")
+  if (strTopic.equals("led1")) {
+    if (mqttData.equals("on")) {
+      digitalWrite(led1, HIGH);
+      Serial.println("LED 1 encendido");
+    } else if (mqttData.equals("off")) {
+      digitalWrite(led1, LOW);
+      Serial.println("LED 1 apagado");
+    }
+  }
+
+  if (strTopic.equals("led2")) {
+    if (mqttData.equals("on")) {
+      digitalWrite(led2, HIGH);
+      Serial.println("LED 2 encendido");
+    } else if (mqttData.equals("off")) {
+      digitalWrite(led2, LOW);
+      Serial.println("LED 2 apagado");
+    }
+  }
+}
+
+// Función setup (se ejecuta una vez al iniciar)
+void setup() {
+  Serial.begin(115200);        // Iniciar comunicación serial para depuración
+
+  // Configurar pines como salidas
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+
+  // Inicializar el sensor DHT
+  dhtSensor.setup(DHT_PIN, DHTesp::DHT22);  // Se asume sensor DHT22
+
+  // Conectarse a la red Wi-Fi
+  Serial.print("Conectando a Wi-Fi...");
+  WiFi.begin("Wokwi-GUEST", "");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(100);
+    Serial.print(".");
+  }
+  Serial.println(" ¡Conectado!");
+
+  // Configurar la conexión MQTT
+  wifiMQTT.setServer(broker.c_str(), port);
+  wifiMQTT.setCallback(mqttCallback);
+
+  // Generar un sufijo aleatorio para el identificador del cliente
+  clientId += String(random(1, 1000));
+
+  Serial.print("ID MQTT: ");
+  Serial.println(clientId);
+
+  // Conectarse al broker MQTT
+  if (wifiMQTT.connect(clientId.c_str())) {
+    Serial.println("¡MQTT conectado!");
+    wifiMQTT.subscribe("led1"); // Suscribirse al topic "led1" para controlar LED 1
+    wifiMQTT.subscribe("led2"); // Suscribirse al topic "led2" para controlar LED 2
+  } else {
+    Serial.println("¡Error MQTT!");
+  }
+
+  prev = millis();  // Inicializar tiempo anterior
+}
+
+// Función para publicar datos de temperatura y humedad en el broker MQTT
+void publicarDatos(float temperatura, float humedad) {
+  // Convertir los valores a strings
+  String strTemperatura = String(temperatura, 2);
+  String strHumedad = String(humedad, 2);
+
+  // Publicar la temperatura en el topic "temperatura"
+  wifiMQTT.publish("temperatura", strTemperatura.c_str());
+  Serial.println("Temperatura publicada °C: " + strTemperatura);
+
+  // Publicar la humedad en el topic "humedad"
+  wifiMQTT.publish("humedad", strHumedad.c_str());
+  Serial.println("Humedad publicada %: " + strHumedad);
+}
+
+// Bucle principal
+void loop() {
+  // Leer datos del sensor cada segundo
+  if (millis() - prev > 1000UL) {
+    prev = millis();
+    TempAndHumidity data = dhtSensor.getTempAndHumidity();
+    // Publicar datos en el broker MQTT
+    publicarDatos(data.temperature, data.humidity);
+  }
+  // Mantener la conexión MQTT
+  wifiMQTT.loop();
+}
+
+```
+
+### Diagrama esquematico
+
+<Center>
+  <Image
+    mb={"lg"}
+    radius="md"
+    src="/static/esquema1.png"
+  />
+</Center>
+
+## Aplicacion Android APK
+
+IoT MQTT Panel: Aplicación para Control y Monitorización
+
+IoT MQTT Panel es una aplicación móvil para dispositivos Android e iOS que te permite:
+
+Conectarte a un broker MQTT:
+
+- Especifica la dirección del broker, puerto y credenciales (si las hay).
+- Selecciona entre diferentes protocolos de conexión (MQTT v3.1, v3.1.1, v5.0).
+
+2\. Suscribirte a tópicos MQTT:
+
+- Recibe mensajes de sensores, dispositivos y otros publicadores en tópicos específicos.
+- Filtra los mensajes por tópico o palabra clave para enfocarte en la información relevante.
+
+3\. Publicar mensajes MQTT:
+
+- Envía comandos a dispositivos, actualiza valores o envía datos a otros suscriptores del tópico.
+- Define el contenido del mensaje, el tópico de destino y la calidad del servicio (QoS).
+
+4\. Visualizar datos:
+
+- Muestra los mensajes recibidos en una interfaz intuitiva y organizada.
+- Personaliza la visualización con diferentes formatos de datos (texto, JSON, etc.).
+- Crea gráficos y dashboards para visualizar la información en tiempo real.
+
+5\. Interactuar con dispositivos:
+
+- Controla dispositivos IoT como LEDs, actuadores, motores, etc., enviando comandos MQTT.
+- Recibe información de sensores y monitoriza el estado de tus dispositivos en tiempo real.
+
+<Link href="https://www.emqx.com/en/mqtt/public-mqtt5-broker" target="_blank">
+  IoT MQTT Panel
+</Link>
